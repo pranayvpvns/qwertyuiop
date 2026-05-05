@@ -1,4 +1,5 @@
 import os
+from contextlib import asynccontextmanager
 
 import bcrypt
 from dotenv import load_dotenv
@@ -7,7 +8,6 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from contextlib import asynccontextmanager
 
 from database import User, create_tables, get_db
 

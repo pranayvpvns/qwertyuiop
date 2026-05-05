@@ -6,3 +6,4 @@ pyodbc
 bcrypt
 python-dotenv
 jinja2
+python-multipart

@@ -28,7 +28,12 @@ class User(Base):
 
 def create_tables():
     """Create all tables in the database."""
-    Base.metadata.create_all(bind=engine)
+    try:
+        Base.metadata.create_all(bind=engine)
+        print("Database tables created successfully.")
+    except Exception as e:
+        print(f"Warning: Could not create tables on startup: {e}")
+        # App will still start; DB errors will surface per-request
 
 
 def get_db():

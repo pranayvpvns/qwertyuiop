@@ -7,15 +7,11 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
+from contextlib import asynccontextmanager
 
 from database import User, create_tables, get_db
 
 load_dotenv()
-
-app = FastAPI(title="Auth App")
-
-# Mount static files (CSS, JS, images)
-app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Jinja2 templates directory
 templates = Jinja2Templates(directory="templates")
@@ -28,10 +24,21 @@ def verify_password(password: str, hashed: str) -> bool:
     return bcrypt.checkpw(password.encode('utf-8'), hashed.encode('utf-8'))
 
 
-@app.on_event("startup")
-def on_startup():
-    """Create database tables on startup."""
-    create_tables()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    try:
+        create_tables()
+        print("Tables ready.")
+    except Exception as e:
+        print(f"DB startup warning: {e}")
+    yield
+    # Shutdown (nothing needed here)
+
+app = FastAPI(title="Auth App", lifespan=lifespan)
+
+# Mount static files (CSS, JS, images)
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 # ─── Pages ────────────────────────────────────────────────────────────────────

@@ -1,13 +1,14 @@
 import os
-from fastapi import FastAPI, Request, Form, Depends
+
+import bcrypt
+from dotenv import load_dotenv
+from fastapi import Depends, FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-import bcrypt
-from dotenv import load_dotenv
 
-from database import get_db, User, create_tables
+from database import User, create_tables, get_db
 
 load_dotenv()
 
